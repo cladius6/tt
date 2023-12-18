@@ -1,4 +1,4 @@
-import { Prop, Schema } from "@nestjs/mongoose";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
 @Schema()
 export class Article {
@@ -14,3 +14,5 @@ export class Article {
   @Prop({ required: false, default: false})
   published?: string;
 }
+
+export const ArticleSchema = SchemaFactory.createForClass(Article);

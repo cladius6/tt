@@ -9,4 +9,4 @@ import { Article, ArticleSchema } from 'src/schemas/article.schema';
   controllers: [ArticlesController],
   providers: [ArticlesService],
 })
-export class AppModule {}
+export class ArticleModule {}

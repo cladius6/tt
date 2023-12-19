@@ -22,6 +22,11 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: root
       ME_CONFIG_MONGODB_URL: mongodb://root:root@mongo:27017/
+ 
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
   
 volumes:
   mongo_data:

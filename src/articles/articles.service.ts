@@ -1,11 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
-import { Article } from 'src/schemas/article.schema';
+import { Article } from 'src/articles/schemas/article.schema';
 import { CreateArticleDto } from './dtos/create-article.dto';
+import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class ArticlesService {
-  constructor(@Inject(Article.name) private articleModel: Model<Article> ) {}
+  constructor(@InjectModel(Article.name) private articleModel: Model<Article> ) {}
 
   async create(createArticleDto: CreateArticleDto): Promise<Article> {
     const createArticle = new this.articleModel(createArticleDto)

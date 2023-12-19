@@ -7,13 +7,21 @@ import { CreateArticleDto } from './dtos/create-article.dto';
 export class ArticlesService {
   constructor(@Inject(Article.name) private articleModel: Model<Article> ) {}
 
-  findAll(): string {
-    return 'Hello World!';
-  }
-
   async create(createArticleDto: CreateArticleDto): Promise<Article> {
     const createArticle = new this.articleModel(createArticleDto)
-    return createArticle
+    return createArticle.save()
+  }
 
+  findAll(): Promise<Article[]> {
+    return this.articleModel.find().exec()
+  }
+
+  findOne(id: string): Promise<Article> {
+    return this.articleModel.findOne({ _id: id }).exec()
+  }
+
+  async delete(id: string) {
+    const deletedArticle = await this.articleModel.findByIdAndDelete({ _id: id }).exec()
+    return deletedArticle;
   }
 }

@@ -1,9 +1,6 @@
 export class CreateArticleDto {
-  title: string;
-
-  description?: string;
-
-  body: string;
-
-  published?: boolean;
+  readonly title: string;
+  readonly description?: string;
+  readonly body: string;
+  readonly published?: boolean;
 }

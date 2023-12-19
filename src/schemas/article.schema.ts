@@ -15,7 +15,7 @@ export class Article {
   body: string;
 
   @Prop({ required: false, default: false})
-  published?: string;
+  published?: boolean;
 }
 
 export const ArticleSchema = SchemaFactory.createForClass(Article);

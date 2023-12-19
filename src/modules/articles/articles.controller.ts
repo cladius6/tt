@@ -1,8 +1,9 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
-import { Article } from 'src/articles/schemas/article.schema';
+import { Article } from 'src/modules/articles/schemas/article.schema';
 import { CreateArticleDto } from './dtos/create-article.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthGuard } from 'src/modules/auth/auth.guard';
+import { PrivateRoute } from 'src/decorators/private-route.decorator';
 
 @Controller('articles')
 export class ArticlesController {
@@ -15,6 +16,7 @@ export class ArticlesController {
 
   @Post()
   @UseGuards(AuthGuard)
+  @PrivateRoute()
   async create(@Body() createArticleDto :CreateArticleDto){
     await this.articlesService.create(createArticleDto)
   }
@@ -26,6 +28,7 @@ export class ArticlesController {
 
   @Get(':id')
   @UseGuards(AuthGuard)
+  @PrivateRoute()
   async delete(@Param('id') id: string) {
     return this.articlesService.delete(id);
   } 

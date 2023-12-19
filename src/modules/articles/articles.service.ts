@@ -6,23 +6,27 @@ import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class ArticlesService {
-  constructor(@InjectModel(Article.name) private articleModel: Model<Article> ) {}
+  constructor(
+    @InjectModel(Article.name) private articleModel: Model<Article>,
+  ) {}
 
   async create(createArticleDto: CreateArticleDto): Promise<Article> {
-    const createArticle = new this.articleModel(createArticleDto)
-    return createArticle.save()
+    const createArticle = new this.articleModel(createArticleDto);
+    return createArticle.save();
   }
 
   findAll(): Promise<Article[]> {
-    return this.articleModel.find().exec()
+    return this.articleModel.find().exec();
   }
 
   findOne(id: string): Promise<Article> {
-    return this.articleModel.findOne({ _id: id }).exec()
+    return this.articleModel.findOne({ _id: id }).exec();
   }
 
   async delete(id: string) {
-    const deletedArticle = await this.articleModel.findByIdAndDelete({ _id: id }).exec()
+    const deletedArticle = await this.articleModel
+      .findByIdAndDelete({ _id: id })
+      .exec();
     return deletedArticle;
   }
 }

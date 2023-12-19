@@ -1,5 +1,5 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { HydratedDocument } from "mongoose";
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
 
 export type ArticleDocument = HydratedDocument<Article>;
 
@@ -14,7 +14,7 @@ export class Article {
   @Prop()
   body: string;
 
-  @Prop({ required: false, default: false})
+  @Prop({ required: false, default: false })
   published?: boolean;
 }
 

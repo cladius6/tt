@@ -1,6 +1,11 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
-import { JwtService } from '@nestjs/jwt'
-import { TokenUtil } from "src/utils/token.utils";
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { TokenUtil } from 'src/utils/token.utils';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -8,17 +13,14 @@ export class AuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const token = TokenUtil.extractTokenFromHeader(request)
+    const token = TokenUtil.extractTokenFromHeader(request);
     if (!token) {
       throw new UnauthorizedException();
     }
     try {
-      const payload = await this.jwtService.verifyAsync(
-        token,
-        {
-          secret: 'temp-not-secure-secret'
-        }
-      );
+      const payload = await this.jwtService.verifyAsync(token, {
+        secret: 'temp-not-secure-secret',
+      });
       // We're assigning the payload to the request object here
       // so that we can access it in our route handlers
       request['user'] = payload;
@@ -27,5 +29,4 @@ export class AuthGuard implements CanActivate {
     }
     return true;
   }
-
 }

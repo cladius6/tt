@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { ArticlesService } from './articles.service';
 import { Article } from 'src/modules/articles/schemas/article.schema';
 import { CreateArticleDto } from './dtos/create-article.dto';
@@ -18,8 +26,8 @@ export class ArticlesController {
 
   @Post()
   @UseGuards(AuthGuard, PrivateThrottlerGuard)
-  async create(@Body() createArticleDto :CreateArticleDto){
-    await this.articlesService.create(createArticleDto)
+  async create(@Body() createArticleDto: CreateArticleDto) {
+    await this.articlesService.create(createArticleDto);
   }
 
   @Get(':id')
@@ -32,5 +40,5 @@ export class ArticlesController {
   @UseGuards(AuthGuard, PrivateThrottlerGuard)
   async delete(@Param('id') id: string) {
     return this.articlesService.delete(id);
-  } 
+  }
 }

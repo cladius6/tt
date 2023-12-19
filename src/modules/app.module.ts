@@ -4,23 +4,40 @@ import { ArticleModule } from './articles/articles.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ThrottlerStorageRedisService } from 'nestjs-throttler-storage-redis';
+import { ConfigModule } from '@nestjs/config';
+import { AppConfigModule } from './app-config/app-config.module';
+import { ThrottlerConfiguration } from './app-config/throttler-config.service';
+import { StorageConfiguration } from './app-config/storage-config.service';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://root:root@localhost:27017'),
+    ConfigModule.forRoot({
+      envFilePath: ['.env.' + process.env.NODE_ENV || 'development', '.env'],
+      isGlobal: true,
+    }),
+    AppConfigModule,
+    MongooseModule.forRootAsync({
+      useFactory: (config: StorageConfiguration) => ({
+        uri: config.mongoDbUri,
+      }),
+      inject: [StorageConfiguration],
+    }),
     ArticleModule,
     JwtModule.register({
       global: true,
       secret: 'temp-not-secure-secret',
     }),
-    ThrottlerModule.forRoot({
-      throttlers: [
-        {
-          ttl: 10000,
-          limit: 2,
-        },
-      ],
-      storage: new ThrottlerStorageRedisService(),
+    ThrottlerModule.forRootAsync({
+      useFactory: (config: ThrottlerConfiguration & StorageConfiguration) => ({
+        throttlers: [
+          {
+            ttl: config.rateTTL,
+            limit: config.rateLimit,
+          },
+        ],
+        storage: new ThrottlerStorageRedisService(config.redisUri),
+      }),
+      inject: [ThrottlerConfiguration, StorageConfiguration],
     }),
   ],
 })

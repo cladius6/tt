@@ -10,9 +10,9 @@ import {
 import { ArticlesService } from './articles.service';
 import { Article } from 'src/modules/articles/schemas/article.schema';
 import { CreateArticleDto } from './dtos/create-article.dto';
-import { AuthGuard } from 'src/modules/auth/auth.guard';
 import { ThrottlerGuard } from '@nestjs/throttler';
-import { PrivateThrottlerGuard } from '../throttler/private-throttler.guard';
+import { PrivateThrottlerGuard } from 'src/guards/private-throttler.guard';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('articles')
 export class ArticlesController {

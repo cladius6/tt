@@ -1,11 +1,11 @@
-import { ExecutionContext, Injectable } from '@nestjs/common';
+import { ExecutionContext, Inject, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import {
-  ThrottlerException,
   ThrottlerGuard,
   ThrottlerOptions,
   ThrottlerStorage,
 } from '@nestjs/throttler';
+import { ThrottlerConfiguration } from 'src/modules/app-config/throttler-config.service';
 import { TokenUtil } from 'src/utils/token.utils';
 
 @Injectable()
@@ -14,12 +14,14 @@ export class PrivateThrottlerGuard extends ThrottlerGuard {
     _options: ThrottlerOptions[],
     storageService: ThrottlerStorage,
     reflector: Reflector,
+    @Inject(ThrottlerConfiguration)
+    readonly throttlerConfiguration: ThrottlerConfiguration,
   ) {
     super(
       [
         {
-          ttl: 3600,
-          limit: 1,
+          ttl: throttlerConfiguration.privateRateTTL,
+          limit: throttlerConfiguration.privateRateLimit,
         },
       ],
       storageService,

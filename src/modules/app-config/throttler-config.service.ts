@@ -20,7 +20,7 @@ export class ThrottlerConfiguration {
 
   constructor(readonly configService: ConfigService<ThrottlerEnvVariables>) {
     const config = ThrottlerEnvVariablesSchema.parse({
-      PRIVATE_RATE_LIMIT: Number(configService.get('RATE_TTL')),
+      PRIVATE_RATE_LIMIT: Number(configService.get('PRIVATE_RATE_LIMIT')),
       PRIVATE_RATE_TTL: Number(configService.get('PRIVATE_RATE_TTL')),
       RATE_LIMIT: Number(configService.get('RATE_LIMIT')),
       RATE_TTL: Number(configService.get('RATE_TTL')),

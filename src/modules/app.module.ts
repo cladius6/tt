@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AppConfigModule } from './app-config/app-config.module';
 import { ThrottlerConfiguration } from './app-config/throttler-config.service';
 import { StorageConfiguration } from './app-config/storage-config.service';
+import Redis from 'ioredis';
 
 @Module({
   imports: [
@@ -28,14 +29,22 @@ import { StorageConfiguration } from './app-config/storage-config.service';
       secret: 'temp-not-secure-secret',
     }),
     ThrottlerModule.forRootAsync({
-      useFactory: (config: ThrottlerConfiguration & StorageConfiguration) => ({
+      useFactory: (
+        config: ThrottlerConfiguration,
+        storageConfig: StorageConfiguration,
+      ) => ({
         throttlers: [
           {
             ttl: config.rateTTL,
             limit: config.rateLimit,
           },
         ],
-        storage: new ThrottlerStorageRedisService(config.redisUri),
+        storage: new ThrottlerStorageRedisService(
+          new Redis({
+            host: storageConfig.redisHost,
+            port: storageConfig.redisPort,
+          }),
+        ),
       }),
       inject: [ThrottlerConfiguration, StorageConfiguration],
     }),

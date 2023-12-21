@@ -2,13 +2,11 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ArticleModule } from './articles/articles.module';
 import { JwtModule } from '@nestjs/jwt';
-import { ThrottlerModule } from '@nestjs/throttler';
-import { ThrottlerStorageRedisService } from 'nestjs-throttler-storage-redis';
 import { ConfigModule } from '@nestjs/config';
 import { AppConfigModule } from './app-config/app-config.module';
-import { ThrottlerConfiguration } from './app-config/throttler-config.service';
 import { StorageConfiguration } from './app-config/storage-config.service';
-import Redis from 'ioredis';
+import { RedisModule } from './redis/redis.module';
+import { RateLimiterModule } from './rate-limiter/rate-limiter.module';
 
 @Module({
   imports: [
@@ -28,26 +26,8 @@ import Redis from 'ioredis';
       global: true,
       secret: 'temp-not-secure-secret',
     }),
-    ThrottlerModule.forRootAsync({
-      useFactory: (
-        config: ThrottlerConfiguration,
-        storageConfig: StorageConfiguration,
-      ) => ({
-        throttlers: [
-          {
-            ttl: config.rateTTL,
-            limit: config.rateLimit,
-          },
-        ],
-        storage: new ThrottlerStorageRedisService(
-          new Redis({
-            host: storageConfig.redisHost,
-            port: storageConfig.redisPort,
-          }),
-        ),
-      }),
-      inject: [ThrottlerConfiguration, StorageConfiguration],
-    }),
+    RedisModule,
+    RateLimiterModule,
   ],
 })
 export class AppModule {}

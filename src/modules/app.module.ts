@@ -7,6 +7,7 @@ import { AppConfigModule } from './app-config/app-config.module';
 import { StorageConfiguration } from './app-config/storage-config.service';
 import { RedisModule } from './redis/redis.module';
 import { RateLimiterModule } from './rate-limiter/rate-limiter.module';
+import { BaseConfiguration } from './app-config/base-config.service';
 
 @Module({
   imports: [
@@ -22,9 +23,11 @@ import { RateLimiterModule } from './rate-limiter/rate-limiter.module';
       inject: [StorageConfiguration],
     }),
     ArticleModule,
-    JwtModule.register({
-      global: true,
-      secret: 'temp-not-secure-secret',
+    JwtModule.registerAsync({
+      useFactory: (config: BaseConfiguration) => ({
+        global: true,
+        secret: config.jwtSecret,
+      }),
     }),
     RedisModule,
     RateLimiterModule,
